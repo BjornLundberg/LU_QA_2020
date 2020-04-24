@@ -1,4 +1,4 @@
-Country;ISOcode;cases;deaths;popdata2;popdata2;cases_log
+Country ISOcode cases deaths popdata2 popdata2 cases_log
 Aruba;ABW;92;0;105845;5.024674;1.968483
 Afghanist;AFG;714;23;37172386;7.570221;2.854306
 Angola;AGO;19;2;30809762;7.488689;1.30103
