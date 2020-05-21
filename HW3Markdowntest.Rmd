@@ -1,0 +1,87 @@
+---
+title: "HW3"
+author: "Björn Lundberg"
+date: '2020-05-21'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+data_cl=read.csv("https://raw.githubusercontent.com/babakrezaee/MethodsCourses/master/LeidenUniv_MAQM2020/Datasets/R%26P_RezaeeAsadzadeh_MethodsCourse.csv")
+```
+
+```{r}
+library(ggplot2)
+```
+
+### 1. Interpret the estimation results reported in the above tables for ml_OLS1 and ml_OLS2. What are the estimated coefficients. Are they statistically significant? How is the explanatory power of these models?
+
+The tables of ml_OLS1 and ml_OLS2 are using Ordinary Least Squares. The estimated coefficient in ml_OLS1 is 5.41. As for ml_OLS2 the estimation is 5.42. The R-square is relatively low for both models and does only increases by one percent when adding Malcom X in OLS2. The model of ml_OLS1 shows a stronger significance, with P being 0 and T value being higher than ml_OLS2. As for ml_OLS2, Mandela P value is still 0 whereas Malcom X is not below commonly accepted values. What we could bring from this model is that Malcom X is not a particularly good control variable of Mandela, and that the significance is high for Mandela and the variable of nonviolence, yet with a very low correlation.
+
+
+### 2. What are the predicted support for the effectiveness of nonviolent movements if a participants in the survey reports a little (4) interest/favorite for Mandela and a great deal (9) of interest/favorite for Malcolm X? Use both ml_OLS1 and ml_OLS2 models, and compare you findings. 
+
+
+> OLS1
+> Nonviolent_effective=5.41+.23*4
+> Nonviolent_effective=6,33 
+
+> OLS2
+> Nonviolent_effective=5.42+.27*4-0,06*9
+> Nonviolent_effective=5,96 
+
+
+The results suggests that recipients with low support for Mandela or high support for Malcolm X does not necessarily correlate with equivalent support of nonviolence. Even when adding a low value in support of Mandela, as being tested singularly in OLS1, the value of 6,33 is above the estimation presented earlier. As for OLS2, when Malcolm X is being added as well, with a higher degree of support, the estimation is lower.
+
+### 3. Assume that someone asks you to include some demographic variables such as age, marriage status, and gender to {ml_OLS2}. Estimate this model (let’s call it {ml_OLS3}) and plot the effect of Mandela, age, and gender on the participants’ predicted attitude toward nonviolent resistance. Do you see any relation between the predicted effect of explanatory variables and their predicted probability.
+
+Not significantly. Age, Malcolm X and Gender P value is still too high, while Mandela’s P is still 0. The plotted model is also similar to OLS1 as well as OLS2. The correlation is not stronger either.
+
+```{r}
+library(jtools)
+```
+
+```{r}
+ml_OLS3=lm(Nonviolent_effective~Mandela+MalcomX+Age+Gender, data=data_cl)
+```
+
+```{r}
+summ(ml_OLS3)
+```
+
+### 4. Assume that mlOLS3 is one of your final models that you want to report in your paper. Check if this model satisfies the Gauss-Markov’s BLUE assumptions. Try to fix these problems based on the suggested remedies in class.
+
+4.	It does fit assumption if we remove the outliers. As visualised below, I have here tried to remove the outliers to present even lines, so called homoskedacity. The line is not perfect, but we see the graph being horizontal. 
+
+![alt text](\Users\B-Lun\OneDrive\Bilder\HW3Images\Q4HW3.PNG)
+
+### 5. Estimate a model that evaluates the conditional effect of Marriage on the association between Religiosity and the attitude toward the effectiveness of nonviolent resistance. Plot this interaction effect. Interpret your results.
+
+```{r}
+ml_OLS6=lm(Nonviolent_effective~Religiosity*Marriage, data=data_cl)
+```
+
+```{r}
+library(jtools)
+```
+
+As shown below, the R square is only 0,02, meaning that the correlation is very weak. Indeed, the P value also show that the result cannot be statiscally significant.
+
+```{r}
+summ(ml_OLS6)
+```
+
+```{r}
+library(sjPlot)
+```
+
+As illustrated in this graph, the result is more complexed than the matrix above. The difference between married and single people, in terms of their view of nonviolence, are enormous. However, their view seems to overlap, and have the smallest different on people being moderately religious. What is interesting is that while single people being more religious, their belief on nonviolence measures increases. Whereas the effect is opposite for married people. The variation of answers is largest for people with large religious affiliation. This group is also the only location where single people does not have an equivalent among the married people. Indeed, single people have a slightly higher variation in terms of belief of nonviolence, if they are religious. 
+
+```{r}
+plot_model(ml_OLS6, type = "pred", terms = c("Religiosity", "Marriage"))
+```
+
